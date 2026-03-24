@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mcad_robot_r2">
+  
+  <xacro:include filename="$(find mcad_robot_r2)/urdf/mcad_robot_r2_arm.xacro"/>
+  <xacro:include filename="$(find mcad_robot_r2)/urdf/mcad_ros2_r2_control.xacro"/>
+  <xacro:include filename="$(find mcad_robot_r2)/urdf/mcad_robot_r2_gripper.xacro"/>
+  <xacro:include filename="$(find mcad_robot_r2)/urdf/mcad_robot_r2_gazebo.xacro"/>
+  <xacro:include filename="$(find mcad_robot_r2)/urdf/camera.urdf.xacro"/>
+  
+  <xacro:macro name="mcad_robot_r2" params="prefix">
+
+    <xacro:mcad_arm_r2 prefix="${prefix}"/>
+
+    <xacro:mcad_robot_r2_gripper prefix="${prefix}"/>
+
+    <xacro:mcad_ros2_r2_control prefix="${prefix}"/>
+
+    <xacro:mcad_robot_r2_gazebo prefix="${prefix}"/>
+
+    <joint name="${prefix}_joint7" type="revolute">
+      <parent link="${prefix}_tool_link"/>
+      <child link="${prefix}_gripper_base_link"/>
+      <origin xyz="0.027 -0.014 -0.00063333" rpy="1.570 0 1.57"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="-0.65" upper="0.65" effort="1.5" velocity="2"/>
+    </joint>
+
+    <link name="${prefix}_tool0">
+      <visual>
+        <geometry><sphere radius="0.005"/></geometry>
+        <material name="red"><color rgba="1 0 0 1"/></material>
+      </visual>
+    </link>
+
+    <joint name="${prefix}_tool0_fixed_joint" type="fixed">
+      <parent link="${prefix}_tool_link"/>
+      <child link="${prefix}_tool0"/>
+      <origin xyz="0.09 0 0" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- Cameras attached to robot base link (uses r2_ prefix) -->
+  <!-- camera_front: positioned in front of base, pointing forward -->
+  <xacro:setup_camera prefix="camera_front" parent_link="r2_base_link" x="0.12" y="0.0" z="0.02" roll="0" pitch="0.0" yaw="0"/>
+  <!-- camera_back: overhead, pointing down toward workspace -->
+  <xacro:setup_camera prefix="camera_back" parent_link="r2_base_link" x="0.25" y="0.0" z="0.5" roll="0" pitch="1.57" yaw="3.14"/>
+
+  <material name="black"><color rgba="0 0 0 1"/></material>
+  <material name="white"><color rgba="1 1 1 1"/></material>
+
+</robot>

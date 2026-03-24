@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="setup_camera" params="prefix parent_link x y z roll pitch yaw">
+
+    <link name="${prefix}_link">
+      <visual>
+        <geometry><box size="0.03 0.03 0.03"/></geometry>
+        <material name="Blue"/>
+      </visual>
+      <collision>
+        <geometry><box size="0.03 0.03 0.03"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="0.01"/>
+        <inertia ixx="0.0001" iyy="0.0001" izz="0.0001" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_joint" type="fixed">
+      <parent link="${parent_link}"/>
+      <child link="${prefix}_link"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+    </joint>
+    
+    <link name="${prefix}_link_optical"/>
+    <joint name="${prefix}_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+      <parent link="${prefix}_link"/>
+      <child link="${prefix}_link_optical"/>
+    </joint>
+
+    <gazebo reference="${prefix}_link">
+      <sensor name="${prefix}" type="camera">
+          <camera>
+            <horizontal_fov>1.3962634</horizontal_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip><near>0.01</near><far>15</far></clip>
+          </camera>
+          <always_on>1</always_on>
+          <update_rate>5</update_rate>
+          <visualize>true</visualize>
+          <topic>${prefix}/image_raw</topic>            
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+</robot>

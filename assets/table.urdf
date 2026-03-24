@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<!-- Simple table with a small block for pick-and-place training -->
+<robot name="table_with_block">
+
+  <!-- ===== TABLE ===== -->
+  <link name="table_top">
+    <visual>
+      <origin xyz="0 0 -0.025" rpy="0 0 0"/>
+      <geometry><box size="0.6 0.6 0.05"/></geometry>
+      <material name="wood"><color rgba="0.82 0.71 0.55 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.025" rpy="0 0 0"/>
+      <geometry><box size="0.6 0.6 0.05"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 -0.025" rpy="0 0 0"/>
+      <inertia ixx="0.3" ixy="0" ixz="0" iyy="0.3" iyz="0" izz="0.3"/>
+    </inertial>
+  </link>
+
+  <!-- ===== BLOCK (graspable object) ===== -->
+  <link name="block">
+    <visual>
+      <geometry><box size="0.03 0.03 0.03"/></geometry>
+      <material name="red_block"><color rgba="0.9 0.2 0.2 1"/></material>
+    </visual>
+    <collision>
+      <geometry><box size="0.03 0.03 0.03"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="3.75e-6" ixy="0" ixz="0" iyy="3.75e-6" iyz="0" izz="3.75e-6"/>
+    </inertial>
+  </link>
+
+</robot>

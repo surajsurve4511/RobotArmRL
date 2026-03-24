@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mcad_robot_r2">
+
+  <!-- Arguments -->
+  <xacro:arg name="use_real_hardware" default="false"/>
+
+  <xacro:arg name="use_mock_hardware" default="false"/>
+
+  <!-- Helper macro for arm joints (sim mode — no servo params) -->
+  <xacro:macro name="arm_joint_sim" params="name initial_value:=0.0">
+    <joint name="${name}">
+      <command_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">${initial_value}</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Helper macro for arm joints (real hardware — with servo config) -->
+  <xacro:macro name="arm_joint_real" params="name servo_id direction:=1.0 center_position:=2047">
+    <joint name="${name}">
+      <param name="servo_id">${servo_id}</param>
+      <param name="direction">${direction}</param>
+      <param name="center_position">${center_position}</param>
+      <command_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Helper macro for mimic joints (NO command_interface — ROS2 Jazzy forbids it
+       on joints that have the <mimic> URDF attribute set) -->
+  <xacro:macro name="mimic_joint" params="name parent multiplier:=1.0">
+    <joint name="${name}">
+      <param name="mimic">${parent}</param>
+      <param name="multiplier">${multiplier}</param>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!--  MAIN ros2_control macro                        -->
+  <!-- ════════════════════════════════════════════════ -->
+  <xacro:macro name="mcad_ros2_r2_control" params="prefix">
+    <ros2_control type="system" name="mcad_arm_system">
+
+      <!-- ── HARDWARE PLUGIN ── -->
+      <hardware>
+        <xacro:if value="$(arg use_real_hardware)">
+          <plugin>mcad_hardware/McadStsSystem</plugin>
+          <param name="port">/dev/ttyACM0</param>
+          <param name="baud_rate">1000000</param>
+          <param name="min_write_interval">0.01</param>
+          <param name="deadband">0.005</param>
+        </xacro:if>
+
+        <xacro:unless value="$(arg use_real_hardware)">
+          <xacro:if value="$(arg use_mock_hardware)">
+            <plugin>mock_components/GenericSystem</plugin>
+            <param name="mimic_joints_use_command_interfaces">false</param>
+          </xacro:if>
+          <xacro:unless value="$(arg use_mock_hardware)">
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+          </xacro:unless>
+        </xacro:unless>
+      </hardware>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!--  REAL HARDWARE JOINTS (with servo IDs)    -->
+      <!-- ══════════════════════════════════════════ -->
+      <xacro:if value="$(arg use_real_hardware)">
+
+        <!-- 6DOF ARM: Servo IDs 11-16 (center_position = raw reading at zero pose) -->
+        <xacro:arm_joint_real name="${prefix}_joint1" servo_id="11" direction="-1.0" center_position="2"/>
+        <xacro:arm_joint_real name="${prefix}_joint2" servo_id="12" direction="-1.0" center_position="3813"/>
+        <xacro:arm_joint_real name="${prefix}_joint3" servo_id="13" direction="-1.0" center_position="1866"/>
+        <xacro:arm_joint_real name="${prefix}_joint4" servo_id="14" direction="-1.0" center_position="1948"/>
+        <xacro:arm_joint_real name="${prefix}_joint5" servo_id="15" direction="1.0" center_position="1953"/>
+        <xacro:arm_joint_real name="${prefix}_joint6" servo_id="16" direction="-1.0" center_position="2249"/>
+        <!-- Gripper: Servo ID 17 -->
+        <xacro:arm_joint_real name="${prefix}_joint7" servo_id="17" direction="1.0" center_position="2047"/>
+
+      </xacro:if>
+
+      <xacro:unless value="$(arg use_real_hardware)">
+
+        <!-- 6DOF ARM (sim) -->
+        <xacro:arm_joint_sim name="${prefix}_joint1"/>
+        <xacro:arm_joint_sim name="${prefix}_joint2"/>
+        <xacro:arm_joint_sim name="${prefix}_joint3"/>
+        <xacro:arm_joint_sim name="${prefix}_joint4"/>
+        <xacro:arm_joint_sim name="${prefix}_joint5"/>
+        <xacro:arm_joint_sim name="${prefix}_joint6"/>
+
+        <!-- Gripper actuator (sim) -->
+        <xacro:arm_joint_sim name="${prefix}_joint7"/>
+
+      </xacro:unless>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!--  MIMIC FINGER JOINTS (shared, both modes) -->
+      <!--  NO command_interface — ROS2 Jazzy forbids -->
+      <!--  command interfaces on mimic joints        -->
+      <!-- ══════════════════════════════════════════ -->
+      <xacro:mimic_joint name="${prefix}_finger_r_link_joint" parent="${prefix}_joint7" multiplier="-1.0"/>
+      <xacro:mimic_joint name="${prefix}_finger_r_base_joint" parent="${prefix}_joint7" multiplier="1.0"/>
+      <xacro:mimic_joint name="${prefix}_finger_r_tip_joint"  parent="${prefix}_joint7" multiplier="-1.0"/>
+      <xacro:mimic_joint name="${prefix}_finger_l_base_joint" parent="${prefix}_joint7" multiplier="-1.0"/>
+      <xacro:mimic_joint name="${prefix}_finger_l_link_joint" parent="${prefix}_joint7" multiplier="-1.0"/>
+      <xacro:mimic_joint name="${prefix}_finger_l_tip_joint"  parent="${prefix}_joint7" multiplier="1.0"/>
+
+    </ros2_control>
+  </xacro:macro>
+
+</robot>

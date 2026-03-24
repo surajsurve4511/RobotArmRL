@@ -1,0 +1,24 @@
+[project]
+name = "mcad-arm-rl"
+version = "0.1.0"
+description = "Reinforcement Learning for MCAD 6DOF Robotic Arm"
+requires-python = ">=3.9"
+dependencies = [
+    "gymnasium>=0.29.0",
+    "pybullet>=3.2.5",
+    "stable-baselines3[extra]>=2.1.0",
+    "numpy>=1.24.0",
+    "tensorboard>=2.14.0",
+    "torch>=2.0.0",
+]
+
+[project.optional-dependencies]
+ros2 = [
+    "rclpy",
+    "sensor_msgs",
+    "trajectory_msgs",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"

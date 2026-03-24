@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<!-- Target sphere visual marker (used to show reach target in PyBullet GUI) -->
+<robot name="target_sphere">
+  <link name="target">
+    <visual>
+      <geometry><sphere radius="0.02"/></geometry>
+      <material name="green_target"><color rgba="0.2 0.9 0.2 0.7"/></material>
+    </visual>
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="1e-8" ixy="0" ixz="0" iyy="1e-8" iyz="0" izz="1e-8"/>
+    </inertial>
+  </link>
+</robot>

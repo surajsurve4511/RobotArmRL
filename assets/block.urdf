@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<!-- Small graspable block for pick and place training -->
+<robot name="block">
+  <link name="block">
+    <visual>
+      <geometry>
+        <box size="0.03 0.03 0.03"/>
+      </geometry>
+      <material name="red">
+        <color rgba="0.8 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.03 0.03 0.03"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.0000037" ixy="0" ixz="0" iyy="0.0000037" iyz="0" izz="0.0000037"/>
+    </inertial>
+  </link>
+</robot>

@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="gripper_base_rh_collision" value="package://${mesh_package}/meshes/collision/gripper_base_rh_collision.stl"/>
+    <xacro:property name="gripper_link_rh_collision" value="package://${mesh_package}/meshes/collision/gripper_link_rh_collision.stl"/>
+    <xacro:property name="gripper_tip_rh_collision" value="package://${mesh_package}/meshes/collision/gripper_tip_rh_collision.stl"/>
+    <xacro:property name="gripper_base_lh_collision" value="package://${mesh_package}/meshes/collision/gripper_base_lh_collision.stl"/>
+    <xacro:property name="gripper_link_lh_collision" value="package://${mesh_package}/meshes/collision/gripper_link_lh_collision.stl"/>
+    <xacro:property name="gripper_tip_lh_collision" value="package://${mesh_package}/meshes/collision/gripper_tip_lh_collision.stl"/>
+    <xacro:property name="mesh_scale" value="1 1 1"/>
+    <xacro:property name="collision_mesh_scale" value="0.001 0.001 0.001"/>
+    <xacro:macro name="mcad_robot_r2_gripper" params="prefix">
+
+    <link name="${prefix}_finger_r_base_link">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_rh-01.dae" scale="1 1 1"/>
+        </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_rh-01.dae" scale="1 1 1"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="-0.00274782 0.00149996 0.00564116" rpy="0 0 0"/>
+            <mass value="0.002"/>
+            <inertia
+                ixx="0.00000024" ixy="-0.00000000" ixz="0.00000011"
+                iyy="0.00000038" iyz="0.00000000"
+                izz="0.00000015"/>
+        </inertial>
+    </link>
+
+    <link name="${prefix}_finger_r_tip_link">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_rh_tip-01.dae" scale="1 1 1"/>
+        </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_rh_tip-01.dae" scale="1 1 1"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0.00748432 -0.00311144 0.02824750" rpy="0 0 0"/>
+            <mass value="0.005"/>
+            <inertia
+                ixx="0.00000190" ixy="0.00000000" ixz="-0.00000035"
+                iyy="0.00000200" iyz="0.00000002"
+                izz="0.00000015"/>
+        </inertial>
+    </link>
+    
+    <joint name="${prefix}_finger_r_tip_joint" type="revolute">
+        <parent link="${prefix}_finger_r_base_link"/>
+        <child  link="${prefix}_finger_r_tip_link"/>
+        <origin xyz="-0.015 0 0.025" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <mimic joint="${prefix}_joint7" multiplier="-1.0" offset="0.0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1.5" velocity="2"/>
+        <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+    
+    <joint name="${prefix}_finger_r_base_joint" type="revolute">
+        <parent link="${prefix}_tool_link"/>
+        <child  link="${prefix}_finger_r_base_link"/>
+        <origin xyz="0.027 -0.014 -0.00063333" rpy="1.570 0 1.57"/>
+        <axis xyz="0 1 0"/>
+        <mimic joint="${prefix}_joint7" multiplier="1.0" offset="0"/>
+        <limit lower="-0.6" upper="0.6" effort="1.5" velocity="2"/>
+        <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+    <link name="${prefix}_finger_r_link_link">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_rh_link-01.dae" scale="1 1 1"/>
+        </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_rh_link-01.dae" scale="1 1 1"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="-0.00712983 0.00219706 0.01190641" rpy="0 0 0"/>
+            <mass value="0.002"/>
+            <inertia
+                ixx="0.00000029" ixy="-0.00000000" ixz="0.00000014"
+                iyy="0.00000032" iyz="0.00000000"
+                izz="0.00000014"/>
+        </inertial>
+    </link>
+
+    <joint name="${prefix}_finger_r_link_joint" type="revolute">
+        <parent link="${prefix}_tool_link"/>
+        <child  link="${prefix}_finger_r_link_link"/>
+        <origin xyz="0.046 -0.005 -0.0015" rpy="1.570 0 1.570"/>
+        <axis xyz="0 1 0"/>
+        <mimic joint="${prefix}_joint7" multiplier="1.0" offset="0.0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1.5" velocity="2"/>
+        <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+    <link name="${prefix}_finger_l_base_link">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_lh_01.dae" scale="1 1 1"/>
+        </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_lh_01.dae" scale="1 1 1"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0.00389228 0.00149997 0.00437752" rpy="0 0 0"/>
+            <mass value="0.003"/>
+            <inertia
+                ixx="0.00000026" ixy="-0.00000000" ixz="-0.00000017"
+                iyy="0.00000055" iyz="-0.00000000"
+                izz="0.00000030"/>
+        </inertial>
+    </link>
+
+    <joint name="${prefix}_finger_l_base_joint" type="revolute">
+        <parent link="${prefix}_tool_link"/>
+        <child  link="${prefix}_finger_l_base_link"/>
+        <origin xyz="0.027 0.014 -0.00063333" rpy="1.570 0 1.57"/>
+        <axis xyz="0 1 0"/>
+        <mimic joint="${prefix}_joint7" multiplier="-1" offset="0"/>
+        <limit lower="-0.6" upper="0.6" effort="1.5" velocity="2"/>
+        <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+    <link name="${prefix}_finger_l_tip_link">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_lh_tip-01.dae" scale="1 1 1"/>
+        </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_lh_tip-01.dae" scale="1 1 1"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="-0.00748432 -0.00311145 0.02824752" rpy="0 0 0"/>
+            <mass value="0.005"/>
+            <inertia
+                ixx="0.00000190" ixy="-0.00000000" ixz="0.00000035"
+                iyy="0.00000200" iyz="0.00000002"
+                izz="0.00000015"/>
+        </inertial>
+    </link>
+
+    <joint name="${prefix}_finger_l_tip_joint" type="revolute">
+        <parent link="${prefix}_finger_l_base_link"/>
+        <child  link="${prefix}_finger_l_tip_link"/>
+        <origin xyz="0.021 0 0.02" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <mimic joint="${prefix}_joint7" multiplier="1.0" offset="0.0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1.5" velocity="2"/>
+        <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+    <link name="${prefix}_finger_l_link_link">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+            <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_lh_link_1.dae" scale="1 1 1"/>
+        </geometry>
+        </visual>
+         <collision>
+            <geometry>
+                <mesh filename="package://mcad_robot_r2/meshes/gripper/gripper_finger_lh_link_1.dae" scale="1 1 1"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0.01001284 0.00219702 0.00960937" rpy="0 0 0"/>
+            <mass value="0.002"/>
+            <inertia
+                ixx="0.00000029" ixy="-0.00000000" ixz="0.00000014"
+                iyy="0.00000032" iyz="0.00000000"
+                izz="0.00000014"/>
+        </inertial>
+    </link>
+
+    <joint name="${prefix}_finger_l_link_joint" type="revolute">
+        <parent link="${prefix}_tool_link"/>
+        <child  link="${prefix}_finger_l_link_link"/>
+        <origin xyz="0.046 0.005 -0.0015" rpy="1.570 0 1.570"/>
+        <axis xyz="0 1 0"/>
+        <mimic joint="${prefix}_joint7" multiplier="-1.0" offset="0.0"/>
+        <limit lower="-3.14159" upper="3.14159" effort="1.5" velocity="2"/>
+        <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+    
+    <link name="${prefix}_gripper_base_link">
+        <inertial>
+            <mass value="0.001"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <inertia ixx="1e-6" ixy="0" ixz="0"
+                    iyy="1e-6" iyz="0"
+                    izz="1e-6"/>
+        </inertial>
+    </link>
+
+    </xacro:macro>
+
+</robot>
